@@ -4,7 +4,8 @@ import c1Img from "./c1.jpg";
 
 export default function Courses() {
 	return (
-		<div className={styles.courses}>
+		<div className="wrap">
+      <div className={styles.courses}>
 			<ul className={styles.list}>
 				<li className={styles.item}>
 					<img
@@ -112,5 +113,6 @@ export default function Courses() {
 				</li>
 			</ul>
 		</div>
+    </div>
 	);
 }
