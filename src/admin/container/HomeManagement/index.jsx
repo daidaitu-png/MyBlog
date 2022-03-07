@@ -68,7 +68,7 @@ const HomeManagement = () => {
 		const newSchema = {
 			name: "Page",
 			attributes: {},
-			children:getSchema(),
+			children: getSchema(),
 		};
 
 		console.log(pageSettingRef);
@@ -87,6 +87,12 @@ const HomeManagement = () => {
 		console.log(newSchema);
 		const schemaStr = JSON.stringify(newSchema);
 		window.localStorage.schema = schemaStr;
+	};
+	const handleResetBtnClick = () => {
+		// const { resetSchema } = areaListRef.current;
+		// resetSchema()
+		const newSchema = JSON.parse(window.localStorage.schema);
+		setSchema(newSchema);
 	};
 
 	return (
@@ -131,9 +137,16 @@ const HomeManagement = () => {
 				>
 					<PageSetting ref={pageSettingRef} />
 					<AreaList ref={areaListRef} children={schema.children || []} />
-					<div className={styles.save}>
+					<div className={styles.buttons}>
 						<Button type="primary" onClick={handleSaveBtnClick}>
 							保存区块配置
+						</Button>
+						<Button
+							type="primary"
+							className={styles.reset}
+							onClick={handleResetBtnClick}
+						>
+							重置区块配置
 						</Button>
 					</div>
 				</Content>
