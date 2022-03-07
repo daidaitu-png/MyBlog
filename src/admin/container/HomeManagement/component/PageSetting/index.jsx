@@ -10,9 +10,11 @@ import styles from "./style.module.scss";
 
 const PageSetting = (props, ref) => {
 	const [schema, setSchema] = useState({});
-	console.log(JSON.parse(window.localStorage.schema));
+	// console.log(JSON.parse(window.localStorage?.schema));
 	useEffect(() => {
-		setSchema(JSON.parse(window.localStorage.schema));
+		setSchema(
+			window.localStorage?.schema ? JSON.parse(window.localStorage?.schema) : {}
+		);
 	}, []);
 	useEffect(() => {
 		setDesc(schema.children?.[0]?.attributes?.desc);

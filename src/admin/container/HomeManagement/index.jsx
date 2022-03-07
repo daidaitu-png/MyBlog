@@ -1,4 +1,4 @@
-import React, { Children, useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Layout, Menu, Button } from "antd";
 import {
 	MenuUnfoldOutlined,
@@ -15,6 +15,12 @@ const { Header, Sider, Content } = Layout;
 
 const HomeManagement = () => {
 	const [collapsed, setCollapsed] = useState(false);
+	const [schema, setSchema] = useState({});
+	useEffect(() => {
+		setSchema(
+			window.localStorage?.schema ? JSON.parse(window.localStorage?.schema) : {}
+		);
+	}, []);
 
 	const toggle = () => {
 		setCollapsed(!collapsed);
@@ -30,45 +36,56 @@ const HomeManagement = () => {
 		// const listData = JSON.stringify(list);
 		// window.localStorage.homeData = listData;
 
-		const schema = {
+		// const { children } = areaListRef.current;
+		// console.log(children);
+
+		const { getSchema } = areaListRef.current;
+		// const schema = {
+		// 	name: "Page",
+		// 	attributes: {},
+		// 	children: [
+		// 		{
+		// 			name: "Banner",
+		// 			attributes: {
+		// 				title: pageSettingRef.current.title,
+		// 				desc: pageSettingRef.current.desc,
+		// 			},
+		// 		},
+		// 		{
+		// 			name: "CourseList",
+		// 		},
+		// 		{
+		// 			name: "Footer",
+		// 		},
+		// 		// {
+		// 		// 	name: "Area",
+		// 		// },
+		// 		// {
+		// 		// 	name: "Area",
+		// 		// },
+		// 	],
+		// };
+		const newSchema = {
 			name: "Page",
 			attributes: {},
-			children: [
-				{
-					name: "Banner",
-					attributes: {
-						title: pageSettingRef.current.title,
-						desc: pageSettingRef.current.desc,
-					},
-				},
-				{
-					name: "CourseList",
-				},
-				{
-					name: "Footer",
-				},
-				// {
-				// 	name: "Area",
-				// },
-				// {
-				// 	name: "Area",
-				// },
-			],
+			children:getSchema(),
 		};
-		areaListRef.current.list.forEach((item) => {
-			schema.children.push({
-				name: "Area",
-			});
-		});
 
 		console.log(pageSettingRef);
 		console.log(areaListRef);
+
+		// areaListRef.current.children.forEach((item) => {
+		// 	schema.children.push({
+		// 		name: "Area",
+		// 	});
+		// });
+
 		// const listData = JSON.stringify(areaListRef.current.list);
 		// window.localStorage.homeData = listData;
 		// window.localStorage.title = pageSettingRef.current.title;
 		// window.localStorage.desc = pageSettingRef.current.desc;
-
-		const schemaStr = JSON.stringify(schema);
+		console.log(newSchema);
+		const schemaStr = JSON.stringify(newSchema);
 		window.localStorage.schema = schemaStr;
 	};
 
@@ -113,7 +130,7 @@ const HomeManagement = () => {
 					}}
 				>
 					<PageSetting ref={pageSettingRef} />
-					<AreaList ref={areaListRef} />
+					<AreaList ref={areaListRef} children={schema.children || []} />
 					<div className={styles.save}>
 						<Button type="primary" onClick={handleSaveBtnClick}>
 							保存区块配置
