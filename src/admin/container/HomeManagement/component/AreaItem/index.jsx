@@ -1,12 +1,9 @@
 import { Input, Button, Modal, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import React, {
-	useState,
-	useEffect,
-	forwardRef,
-	useImperativeHandle,
-} from "react";
+import React, { useState } from "react";
 import styles from "./style.module.scss";
+import { getChangePageChildAction,getDeletePageChildAction } from "../../store/action";
+import { useDispatch, useSelector } from "react-redux";
 
 const { Option } = Select;
 
@@ -16,53 +13,29 @@ const SELECT_OPTIONS = {
 	Footer: "Footer Comp",
 };
 
-// let prevSchema = {};
-
-const AreaItem = (props, ref) => {
-	const { index, item, removeItemFromChildren, changeChildrenItem,changeAreaItem } = props;
+const AreaItem = (props) => {
+	const { index } = props;
+	const pageChild = useSelector((state) => {
+		return state.homeManagement.schema?.children?.[index] || {};
+	});
 	const [isModalVisibal, setIsModalVisibal] = useState(false);
-
-	// const [schema, setSchema] = useState(item);
-	const [schema, setSchema] = useState(item);
-  const [temp, setTemp] = useState(item);
-
-  useEffect(()=>{
-    setSchema(props.item)
-    setTemp(props.item)
-  },[props.item])
+	const dispatch = useDispatch();
+	const [temp, setTemp] = useState(pageChild);
 
 	const showModal = () => {
 		setIsModalVisibal(true);
 	};
 	const handleOk = () => {
 		setIsModalVisibal(false);
-		// changeChildrenItem(index, schema);
-		// prevSchema = {};
-    setSchema(temp)
-    changeAreaItem(index,temp)
+		dispatch(getChangePageChildAction(index, temp));
 	};
 
-	useImperativeHandle(ref, () => {
-		return {
-			getSchema: () => {
-				return schema;
-			},
-			// resetSchema: () => {
-			// 	setSchema(item);
-			// 	// prevSchema = {};
-			// },
-		};
-	});
-
 	const handleCancel = () => {
-		// setSchema(prevSchema);
 		setIsModalVisibal(false);
-    setTemp(schema)
-		// prevSchema = {};
+		setTemp(pageChild);
 	};
 
 	const handleSelectorChange = (value) => {
-		// prevSchema = { ...schema };
 		const newSchema = {
 			name: value,
 			attributes: {},
@@ -70,19 +43,17 @@ const AreaItem = (props, ref) => {
 		};
 		setTemp(newSchema);
 	};
+  const removePageChild=()=>{
+    dispatch(getDeletePageChildAction(index))
+  }
 
 	return (
 		<li className={styles.item}>
 			<span className={styles.content} onClick={showModal}>
-				{schema.name ? schema.name + " 组件" : "当前区块内容为空"}
+				{pageChild.name ? pageChild.name + " 组件" : "当前区块内容为空"}
 			</span>
 			<span className={styles.delete}>
-				<Button
-					onClick={() => removeItemFromChildren(index)}
-					type="dashed"
-					size="small"
-					danger
-				>
+				<Button onClick={removePageChild} type="dashed" size="small" danger>
 					delete
 				</Button>
 				<Modal
@@ -97,9 +68,6 @@ const AreaItem = (props, ref) => {
 						onChange={handleSelectorChange}
 						value={temp.name}
 					>
-						{/* {Object.values(SELECT_OPTIONS).map((item, index) => (
-							<Option value={index}>{item}</Option>
-						))} */}
 						<Option value="Bannner">Bannner Comp</Option>
 						<Option value="List">List Comp</Option>
 						<Option value="Footer">Footer Comp</Option>
@@ -110,4 +78,4 @@ const AreaItem = (props, ref) => {
 	);
 };
 
-export default forwardRef(AreaItem);
+export default AreaItem;

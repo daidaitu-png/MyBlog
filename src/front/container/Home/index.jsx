@@ -19,7 +19,7 @@ const Home = () => {
 		// 		? JSON.parse(window.localStorage.homeData)
 		// 		: list
 		// );
-		setList(JSON.parse(window.localStorage?.schema).children?.splice(3));
+		setList(JSON.parse(window.localStorage?.schema).children?.splice(3)||{});
 	}, []);
 	return (
 		<div>

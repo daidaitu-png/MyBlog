@@ -10,7 +10,7 @@ export default function Banner() {
   const [schema, setSchema] = useState({});
 
   useEffect(()=>{
-    setSchema(JSON.parse(window.localStorage?.schema))
+    setSchema(JSON.parse(window.localStorage?.schema)||{})
   },[])
 
 	// useEffect(() => {

@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Layout, Menu, Button } from "antd";
 import {
 	MenuUnfoldOutlined,
@@ -10,17 +11,30 @@ import {
 import styles from "./style.module.scss";
 import AreaList from "./component/AreaList";
 import PageSetting from "./component/PageSetting";
+import { getChangeSchemaAction } from "./store/action";
 
 const { Header, Sider, Content } = Layout;
 
+const useStore = () => {
+	const dispatch = useDispatch();
+	const schema = useSelector((state) => {
+		return state.homeManagement.schema;
+	});
+	const changeSchema = (schema) => {
+		dispatch(getChangeSchemaAction(schema));
+	};
+	return { schema, changeSchema };
+};
+
 const HomeManagement = () => {
 	const [collapsed, setCollapsed] = useState(false);
-	const [schema, setSchema] = useState({});
-	useEffect(() => {
-		setSchema(
-			window.localStorage?.schema ? JSON.parse(window.localStorage?.schema) : {}
-		);
-	}, []);
+	// const dispatch = useDispatch();
+	const { schema, changeSchema } = useStore();
+
+	// const schema = useSelector((state) => {
+	// 	console.log(state);
+	// 	return state.homeManagement.schema;
+	// });
 
 	const toggle = () => {
 		setCollapsed(!collapsed);
@@ -29,70 +43,12 @@ const HomeManagement = () => {
 		window.location.href = "/";
 	};
 
-	const pageSettingRef = useRef();
-	const areaListRef = useRef();
-
 	const handleSaveBtnClick = () => {
-		// const listData = JSON.stringify(list);
-		// window.localStorage.homeData = listData;
-
-		// const { children } = areaListRef.current;
-		// console.log(children);
-
-		const { getSchema } = areaListRef.current;
-		// const schema = {
-		// 	name: "Page",
-		// 	attributes: {},
-		// 	children: [
-		// 		{
-		// 			name: "Banner",
-		// 			attributes: {
-		// 				title: pageSettingRef.current.title,
-		// 				desc: pageSettingRef.current.desc,
-		// 			},
-		// 		},
-		// 		{
-		// 			name: "CourseList",
-		// 		},
-		// 		{
-		// 			name: "Footer",
-		// 		},
-		// 		// {
-		// 		// 	name: "Area",
-		// 		// },
-		// 		// {
-		// 		// 	name: "Area",
-		// 		// },
-		// 	],
-		// };
-		const newSchema = {
-			name: "Page",
-			attributes: {},
-			children: getSchema(),
-		};
-
-		console.log(pageSettingRef);
-		console.log(areaListRef);
-
-		// areaListRef.current.children.forEach((item) => {
-		// 	schema.children.push({
-		// 		name: "Area",
-		// 	});
-		// });
-
-		// const listData = JSON.stringify(areaListRef.current.list);
-		// window.localStorage.homeData = listData;
-		// window.localStorage.title = pageSettingRef.current.title;
-		// window.localStorage.desc = pageSettingRef.current.desc;
-		console.log(newSchema);
-		const schemaStr = JSON.stringify(newSchema);
+		const schemaStr = JSON.stringify(schema);
 		window.localStorage.schema = schemaStr;
 	};
 	const handleResetBtnClick = () => {
-		// const { resetSchema } = areaListRef.current;
-		// resetSchema()
-		const newSchema = JSON.parse(window.localStorage.schema);
-		setSchema(newSchema);
+		changeSchema(JSON.parse(window.localStorage.schema));
 	};
 
 	return (
@@ -119,13 +75,6 @@ const HomeManagement = () => {
 					) : (
 						<MenuFoldOutlined className={styles.trigger} onClick={toggle} />
 					)}
-					{/* {React.createElement(
-							this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-							{
-								className: "trigger",
-								onClick: this.toggle,
-							}
-						)} */}
 				</Header>
 				<Content
 					className="site-layout-background"
@@ -135,8 +84,8 @@ const HomeManagement = () => {
 						minHeight: 1000,
 					}}
 				>
-					<PageSetting ref={pageSettingRef} />
-					<AreaList ref={areaListRef} children={schema.children || []} />
+					<PageSetting />
+					<AreaList children={schema.children || []} />
 					<div className={styles.buttons}>
 						<Button type="primary" onClick={handleSaveBtnClick}>
 							保存区块配置
