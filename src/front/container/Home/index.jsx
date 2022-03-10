@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Bannner from "./components/Banner";
+import Banner from "./components/Banner";
 import Courses from "./components/Courses";
 import Footer from "./components/Footer";
 
@@ -14,24 +14,35 @@ import Footer from "./components/Footer";
 const Home = () => {
 	const [list, setList] = useState([]);
 	useEffect(() => {
-		// setList(
-		// 	window.localStorage.homeData
-		// 		? JSON.parse(window.localStorage.homeData)
-		// 		: list
-		// );
-		setList(JSON.parse(window.localStorage?.schema).children?.splice(3)||{});
+		setList(JSON.parse(window.localStorage?.schema)?.children);
+		console.log(window.localStorage?.schema);
 	}, []);
+
+	const map = { Footer, Banner, List: Courses };
+
+	const render = (index, item) => {
+		const Component = map[item.name];
+		return Component ? <Component key={index} schema={item} /> : null;
+		// switch (item.name) {
+		// 	case "Banner":
+		// 		return <Bannner key={index} schema={item}/>;
+		// 	case "Footer":
+		// 		return <Footer key={index} schema={item}/>;
+		// 	case "List":
+		// 		return <Courses key={index} schema={item}/>;
+		// 	default:
+		// 		return null;
+		// }
+	};
+
 	return (
 		<div>
-			<Bannner />
+			{/* <Bannner />
 			<Courses />
-			<Footer />
+			<Footer /> */}
 			{list.map((item, index) => {
-				return (
-					<div class="wrap" key={index}>
-						area
-					</div>
-				);
+				console.log(item.name);
+				return render(index, item);
 			})}
 		</div>
 	);

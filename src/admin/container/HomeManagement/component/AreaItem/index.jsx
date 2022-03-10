@@ -1,38 +1,60 @@
 import { Input, Button, Modal, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import { SortableElement } from "react-sortable-hoc";
 import React, { useState } from "react";
 import styles from "./style.module.scss";
-import { getChangePageChildAction,getDeletePageChildAction } from "../../store/action";
+import {
+	getChangePageChildAction,
+	getDeletePageChildAction,
+} from "../../store/action";
 import { useDispatch, useSelector } from "react-redux";
+import { CHANGE_PAGE_CHILD } from "../../store/constant";
 
 const { Option } = Select;
 
-const SELECT_OPTIONS = {
-	Banner: "Bannner Comp",
-	List: "List Comp",
-	Footer: "Footer Comp",
-};
-
-const AreaItem = (props) => {
-	const { index } = props;
+const useStore = (index) => {
+	const dispatch = useDispatch();
 	const pageChild = useSelector((state) => {
 		return state.homeManagement.schema?.children?.[index] || {};
 	});
+
+	const changePageChild = (tempPageChild) => {
+		dispatch(getChangePageChildAction(index, tempPageChild));
+	};
+
+	const removePageChild = () => {
+		dispatch(getChangePageChildAction(index));
+	};
+
+	return { pageChild, changePageChild, removePageChild };
+};
+
+// const SELECT_OPTIONS = {
+// 	Banner: "Bannner Comp",
+// 	List: "List Comp",
+// 	Footer: "Footer Comp",
+// };
+
+const AreaItem = (props) => {
+	const { value: index } = props;
+
+	const { pageChild, changePageChild, removePageChild } = useStore(index);
+
 	const [isModalVisibal, setIsModalVisibal] = useState(false);
-	const dispatch = useDispatch();
-	const [temp, setTemp] = useState(pageChild);
+	// const dispatch = useDispatch();
+	const [tempPageChild, setTempPageChild] = useState(pageChild);
 
 	const showModal = () => {
 		setIsModalVisibal(true);
 	};
 	const handleOk = () => {
 		setIsModalVisibal(false);
-		dispatch(getChangePageChildAction(index, temp));
+		changePageChild(tempPageChild);
 	};
 
 	const handleCancel = () => {
 		setIsModalVisibal(false);
-		setTemp(pageChild);
+		setTempPageChild(pageChild);
 	};
 
 	const handleSelectorChange = (value) => {
@@ -41,11 +63,8 @@ const AreaItem = (props) => {
 			attributes: {},
 			children: [],
 		};
-		setTemp(newSchema);
+		setTempPageChild(newSchema);
 	};
-  const removePageChild=()=>{
-    dispatch(getDeletePageChildAction(index))
-  }
 
 	return (
 		<li className={styles.item}>
@@ -66,9 +85,9 @@ const AreaItem = (props) => {
 						className={styles.selector}
 						style={{ width: "100%" }}
 						onChange={handleSelectorChange}
-						value={temp.name}
+						value={tempPageChild.name}
 					>
-						<Option value="Bannner">Bannner Comp</Option>
+						<Option value="Banner">Banner Comp</Option>
 						<Option value="List">List Comp</Option>
 						<Option value="Footer">Footer Comp</Option>
 					</Select>
@@ -78,4 +97,4 @@ const AreaItem = (props) => {
 	);
 };
 
-export default AreaItem;
+export default SortableElement(AreaItem);

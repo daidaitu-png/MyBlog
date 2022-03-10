@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import styles from "./style.module.scss";
 import avatarImg from "./avatar.jpg";
 
-export default function Banner() {
+export default function Banner({schema}) {
 	// const title = window.localStorage.title || "";
 	// const desc = window.localStorage.desc || "";
 	const [title, setTitle] = useState("This is the title area");
 	const [desc, setDesc] = useState("This is the description area");
-  const [schema, setSchema] = useState({});
+  // const [schema, setSchema] = useState({});
 
-  useEffect(()=>{
-    setSchema(JSON.parse(window.localStorage?.schema)||{})
-  },[])
+  // useEffect(()=>{
+  //   setSchema(JSON.parse(window.localStorage?.schema)||{})
+  // },[])
 
 	// useEffect(() => {
 	// 	setTitle(window.localStorage.title || title);
