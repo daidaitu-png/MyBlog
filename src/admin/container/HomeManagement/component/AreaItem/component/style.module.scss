@@ -1,0 +1,58 @@
+.wrapper {
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+
+.attribute-row {
+  display: flex;
+  margin-bottom: 15px;
+
+  .label {
+    width: 70px;
+  }
+
+  .content {
+    flex: 1;
+  }
+}
+
+.button {
+  margin: 10px 0;
+}
+
+.area {
+  border: 1px solid #ccc;
+  padding: 10px 10px 0 10px;
+  margin-bottom: 20px;
+  position: relative;
+
+  .delete {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #f00;
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .area-row {
+    display: flex;
+    margin-bottom: 10px;
+
+    .label {
+      width: 40px;
+      line-height: 32px;
+    }
+
+    .content {
+      flex: 1;
+    }
+  }
+}

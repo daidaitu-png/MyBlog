@@ -1,10 +1,11 @@
-import { produce,original } from "immer";
+import { produce, original } from "immer";
 import {
 	CHANGE_SCHEMA,
 	ADD_PAGE_CHILDREN,
 	CHANGE_PAGE_CHILD,
 	DELETE_PAGE_CHILD,
 	CHANGE_PAGE_CHILD_POSITION,
+	CHANGE_PAGE_ATTRIBUTE,
 } from "./constant";
 
 const initialSchema = JSON.parse(window.localStorage?.schema) || {
@@ -32,9 +33,12 @@ const reducer = (state = defaultState, action) =>
 				draft.schema.children.splice(action.index, 1);
 				break;
 			case CHANGE_PAGE_CHILD_POSITION:
-				const copy = original(draft.schema.children)
-        draft.schema.children.splice(action.oldIndex,1)
-        draft.schema.children.splice(action.newIndex,0,copy[action.oldIndex])
+				const copy = original(draft.schema.children);
+				draft.schema.children.splice(action.oldIndex, 1);
+				draft.schema.children.splice(action.newIndex, 0, copy[action.oldIndex]);
+				break;
+			case CHANGE_PAGE_ATTRIBUTE:
+				draft.schema.attributes[action.key] = action.value;
 				break;
 			default:
 				return state;

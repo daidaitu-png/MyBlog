@@ -1,38 +1,32 @@
 import React, { useState, useEffect } from "react";
 import styles from "./style.module.scss";
-import avatarImg from "./avatar.jpg";
 
-export default function Banner({schema}) {
-	// const title = window.localStorage.title || "";
-	// const desc = window.localStorage.desc || "";
-	const [title, setTitle] = useState("This is the title area");
-	const [desc, setDesc] = useState("This is the description area");
-  // const [schema, setSchema] = useState({});
+export default function Banner({ schema }) {
+	const { attributes = {} } = schema;
+	const {
+		title,
+		showSmallPic,
+		bgUrl,
+    smallPicUrl,
+		bgHeight,
+		description = "TS在构建大型应用上的优势，以及与JS的完美互通，让TS未来一片光明，在慕课网人气讲师dell老师带你从0到1系统学习，把TS真正应用到框架和项目中，在框架中学，在项目中学，在老师指导中学！",
+	} = attributes;
 
-  // useEffect(()=>{
-  //   setSchema(JSON.parse(window.localStorage?.schema)||{})
-  // },[])
+	const wrapperStyleObj = bgUrl ? { backgroundImage: `url('${bgUrl}')` } : {};
 
-	// useEffect(() => {
-	// 	setTitle(window.localStorage.title || title);
-	// 	setDesc(window.localStorage.desc || desc);
-	// }, []);
+	bgHeight && (wrapperStyleObj.height = parseInt(bgHeight, 10));
 
-  useEffect(()=>{
-    setTitle(schema?.children?.[0]?.attributes?.title)
-    setDesc(schema?.children?.[0]?.attributes?.desc)
-  },[schema])
 	return (
-		<div className="wrap">
+		<div className="wrap" style={wrapperStyleObj}>
 			<div className={styles.banner}>
 				<div className={styles.person}>
-					<img
-						className={styles.avatar}
-						src="https://lm-serverless-project-static-files.oss-cn-beijing.aliyuncs.com/images/avatar.jpg?Expires=1646486937&OSSAccessKeyId=TMP.3KhNsSeQyjLsoX4d8maDXRd7aoqH5LXqovHVnREGwbGWH5yop8w3qGvT8e36AAnzeip26n13DcNRGViYMUHgEiyu9kNvMD&Signature=s3P2DrV8N%2BpM%2BYmlgRy2rHpQgnQ%3D"
-						alt=""
-					/>
-					<div className={styles.title}>{title}</div>
-					<div className={styles.desc}>{desc}</div>
+					{showSmallPic && smallPicUrl ? (
+						<img className={styles.avatar} src={smallPicUrl} alt="" />
+					) : null}
+					<div className={styles.content}>
+						<div className={styles.title}>{title}</div>
+						<div className={styles.desc}>{description}</div>
+					</div>
 				</div>
 			</div>
 		</div>

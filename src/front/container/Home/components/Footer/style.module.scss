@@ -1,16 +1,27 @@
-.footer{
-  // width: 1280px;
-  height: 60px;
-  // margin: 0 auto 10px auto;
+.footer {
   background: #fff;
-  .list{
+  padding: 10px;
+
+  .list {
     list-style: none;
-    .item{
-      line-height: 60px;
-      .link{
-        color: cornflowerblue;
+    margin: 0;
+    padding: 0 10px;
+
+    .item {
+      line-height: 28px;
+      font-size: 14px;
+
+      .link {
+        color: #545c63;
         text-decoration: none;
       }
     }
+  }
+
+  .copyright {
+    line-height: 24px;
+    font-size: 12px;
+    color: #93999f;
+    margin-left: 10px;
   }
 }

@@ -1,48 +1,54 @@
 import { Input, Button, Modal, Select } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { SortableElement } from "react-sortable-hoc";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./style.module.scss";
 import {
 	getChangePageChildAction,
 	getDeletePageChildAction,
-} from "../../store/action";
+} from "../../../../store/action";
 import { useDispatch, useSelector } from "react-redux";
-import { CHANGE_PAGE_CHILD } from "../../store/constant";
+import { CHANGE_PAGE_CHILD } from "../../../../store/constant";
+import Banner from "./component/Banner";
+import { cloneDeep } from "lodash";
+import List from "./component/List";
+import Footer from "./component/Footer";
 
 const { Option } = Select;
 
 const useStore = (index) => {
 	const dispatch = useDispatch();
 	const pageChild = useSelector((state) => {
-		return state.homeManagement.schema?.children?.[index] || {};
+		return state.common.schema?.children?.[index] || {};
 	});
 
-	const changePageChild = (tempPageChild) => {
-		dispatch(getChangePageChildAction(index, tempPageChild));
+	const changePageChild = (temp) => {
+		dispatch(getChangePageChildAction(index, temp));
 	};
 
 	const removePageChild = () => {
-		dispatch(getChangePageChildAction(index));
+		dispatch(getDeletePageChildAction(index));
 	};
 
 	return { pageChild, changePageChild, removePageChild };
 };
 
-// const SELECT_OPTIONS = {
-// 	Banner: "Bannner Comp",
-// 	List: "List Comp",
-// 	Footer: "Footer Comp",
-// };
+const map = {
+	Banner: Banner,
+	List: List,
+	Footer: Footer,
+};
 
 const AreaItem = (props) => {
 	const { value: index } = props;
-
 	const { pageChild, changePageChild, removePageChild } = useStore(index);
-
 	const [isModalVisibal, setIsModalVisibal] = useState(false);
 	// const dispatch = useDispatch();
-	const [tempPageChild, setTempPageChild] = useState(pageChild);
+	const [tempPageChild, setTempPageChild] = useState(cloneDeep(pageChild));
+
+	useEffect(() => {
+		setTempPageChild(cloneDeep(pageChild));
+	}, [pageChild]);
 
 	const showModal = () => {
 		setIsModalVisibal(true);
@@ -54,7 +60,7 @@ const AreaItem = (props) => {
 
 	const handleCancel = () => {
 		setIsModalVisibal(false);
-		setTempPageChild(pageChild);
+		setTempPageChild(cloneDeep(pageChild));
 	};
 
 	const handleSelectorChange = (value) => {
@@ -64,6 +70,34 @@ const AreaItem = (props) => {
 			children: [],
 		};
 		setTempPageChild(newSchema);
+	};
+
+	const changeTempPageChildAttributes = (kvObj) => {
+		const newTempPageChild = { ...tempPageChild };
+		for (const key in kvObj) {
+			newTempPageChild.attributes[key] = kvObj[key];
+		}
+
+		setTempPageChild(newTempPageChild);
+	};
+
+	const changeTempPageChildChildren = (children) => {
+		const newTempPageChild = { ...tempPageChild };
+		newTempPageChild.children = children;
+		setTempPageChild(newTempPageChild);
+	};
+
+	const getComponent = () => {
+		const { name } = tempPageChild;
+		console.log(tempPageChild);
+		const Component = map[name];
+		return Component ? (
+			<Component
+				{...tempPageChild}
+				changeAttributes={changeTempPageChildAttributes}
+				changeChildren={changeTempPageChildChildren}
+			/>
+		) : null;
 	};
 
 	return (
@@ -80,6 +114,10 @@ const AreaItem = (props) => {
 					visible={isModalVisibal}
 					onOk={handleOk}
 					onCancel={handleCancel}
+					bodyStyle={{
+						maxHeight: "500px",
+						overflowY: "scroll",
+					}}
 				>
 					<Select
 						className={styles.selector}
@@ -91,6 +129,7 @@ const AreaItem = (props) => {
 						<Option value="List">List Comp</Option>
 						<Option value="Footer">Footer Comp</Option>
 					</Select>
+					{getComponent()}
 				</Modal>
 			</span>
 		</li>

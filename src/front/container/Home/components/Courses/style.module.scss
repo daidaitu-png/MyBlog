@@ -14,15 +14,21 @@
     .item{
       width: 20%;
       margin-top: 10px;
+      .link{
+        color: #777;
+        text-decoration: none;
+      }
       .img{
         display: block;
         width: 240px;
         height: 180px;
         margin: 0 auto;
+        border-radius: 10px;
       }
       .title{
         font-size: 16px;
         padding: 0 10px;
+        color: #000;
         margin: 0;
         line-height: 32px;
         font-weight: normal;

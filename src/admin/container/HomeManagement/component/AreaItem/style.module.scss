@@ -1,4 +1,4 @@
-.item{
+.item {
   display: flex;
   margin-bottom: 15px;
   line-height: 40px;
@@ -6,14 +6,21 @@
   padding: 0 10px;
   background: #fff;
   color: #999;
-  &:last-of-type{
+
+  &:last-of-type {
     margin-bottom: 20px;
   }
-  .content{
+
+  .content {
     flex: 1;
   }
-  .delete{
+
+  .delete {
     width: 80px;
     text-align: right;
   }
+}
+
+.selector {
+  margin-bottom: 15px;
 }

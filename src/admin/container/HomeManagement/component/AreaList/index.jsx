@@ -4,7 +4,7 @@ import AreaItem from "../AreaItem";
 import styles from "./style.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { SortableContainer } from "react-sortable-hoc";
-import { getAddPageChildrenAction,getChangePageChildPositionAction } from "../../store/action";
+import { getAddPageChildrenAction,getChangePageChildPositionAction } from "../../../../store/action";
 
 const SortableList = SortableContainer(({ list }) => {
 	return (
@@ -18,7 +18,7 @@ const SortableList = SortableContainer(({ list }) => {
 
 const AreaList = (props) => {
 	const children = useSelector((state) => {
-		return state.homeManagement.schema?.children || [];
+		return state.common.schema?.children || [];
 	});
 	const dispatch = useDispatch();
 
